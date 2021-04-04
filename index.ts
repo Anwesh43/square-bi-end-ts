@@ -21,7 +21,7 @@ class ScaleUtil {
     }
 
     static divideScale(scale : number, i : number, n : number) : number {
-        return Math.min(1 / n, scale - i / n)
+        return Math.min(1 / n, ScaleUtil.maxScale(scale, i, n)) * n 
     }
 
     static sinify(scale : number) : number {
@@ -50,10 +50,12 @@ class DrawingUtil {
         const sf1 : number = ScaleUtil.divideScale(sf, 0, parts)
         const sf2 : number = ScaleUtil.divideScale(sf, 1, parts)
         const sf3 : number = ScaleUtil.divideScale(sf, 2, parts) 
+        const sf4 : number = ScaleUtil.divideScale(sf, 3, parts)
         const r : number = size / 10
         context.save()
-        context.translate(w / 2, h / w)
-        context.strokeRect(-size / 2, -size / 2, -size / 2 + size * sf1, -size / 2 + size * sf1)
+        context.translate(w / 2, h / 2)
+        context.rotate(Math.PI * 0.5 * sf4)
+        context.strokeRect(-size * 0.5 * sf1, -size * 0.5 * sf1, size * sf1, size * sf1)
         for (var j = 0; j < 2; j++) {
             const y : number = -(size / 2) * (1 - 2 * j)
             DrawingUtil.drawLine(context, 0, y, 0, y + (size / 2) * (1 - 2 * j) * sf2)
@@ -114,6 +116,7 @@ class State {
 
     update(cb : Function) {
         this.scale += scGap * this.dir 
+        console.log(this.scale)
         if (Math.abs(this.scale - this.prevScale) > 1) {
             this.scale = this.prevScale + this.dir 
             this.dir = 0 
@@ -157,7 +160,7 @@ class SBENode {
     prev : SBENode 
 
     constructor(private i : number) {
-        
+        this.addNeighbor()
     }
 
     addNeighbor() {
