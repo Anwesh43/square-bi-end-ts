@@ -28,3 +28,42 @@ class ScaleUtil {
         return Math.sin(scale * Math.PI)
     }
 }
+
+class DrawingUtil {
+    
+    static drawLine(context : CanvasRenderingContext2D, x1 : number, y1 : number, x2 : number, y2 : number) {
+        context.beginPath()
+        context.moveTo(x1, y1)
+        context.lineTo(x2, y2)
+        context.stroke()
+    }
+
+    static drawCircle(context : CanvasRenderingContext2D, x : number, y : number, r : number) {
+        context.beginPath()
+        context.arc(x, y, r, 0 , 2 * Math.PI)
+        context.fill()
+    }
+
+    static drawSquareBiEnd(context : CanvasRenderingContext2D, scale : number) {
+        const size : number = Math.min(w, h) / sizeFactor
+        const sf : number = ScaleUtil.sinify(scale)
+        const sf1 : number = ScaleUtil.divideScale(sf, 0, parts)
+        const sf2 : number = ScaleUtil.divideScale(sf, 1, parts)
+        const sf3 : number = ScaleUtil.divideScale(sf, 2, parts) 
+        const r : number = size / 10
+        context.save()
+        context.translate(w / 2, h / w)
+        context.strokeRect(-size / 2, -size / 2, -size / 2 + size * sf1, -size / 2 + size * sf1)
+        for (var j = 0; j < 2; j++) {
+            const y : number = -(size / 2) * (1 - 2 * j)
+            DrawingUtil.drawLine(context, 0, y, 0, y + (size / 2) * (1 - 2 * j) * sf2)
+        }
+        DrawingUtil.drawCircle(context, 0, 0, r * sf3,)
+        context.restore()
+    }
+
+    static drawSBENode(context : CanvasRenderingContext2D, i : number, scale : number) {
+        context.fillStyle = colors[i]
+        DrawingUtil.drawSquareBiEnd(context, scale)
+    }
+}
