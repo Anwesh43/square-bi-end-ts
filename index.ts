@@ -64,6 +64,9 @@ class DrawingUtil {
 
     static drawSBENode(context : CanvasRenderingContext2D, i : number, scale : number) {
         context.fillStyle = colors[i]
+        context.strokeStyle = colors[i]
+        context.lineWidth = Math.min(w, h) / strokeFactor 
+        context.lineCap = 'round'
         DrawingUtil.drawSquareBiEnd(context, scale)
     }
 }
